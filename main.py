@@ -2,6 +2,7 @@ from company_discovery import find_similar_companies
 from prospeo_client import find_decision_makers
 from eazyreach_client import find_email
 from email_generator import generate_email
+from brevo_client import send_email
 
 
 def main():
@@ -42,6 +43,8 @@ def main():
             contact["company"]
         )
 
+        contact["email_content"] = email_content
+
         print("\n" + "-" * 50)
         print(f"To: {contact['email']}")
         print(email_content)
@@ -53,7 +56,27 @@ def main():
     choice = input("\nSend emails? (y/n): ")
 
     if choice.lower() == "y":
-        print("\nEmails sent successfully!")
+
+        print("\nSending emails...")
+
+        # TEST MODE: sends only one email
+        test_email = input(
+            "\nEnter your email for testing: "
+        )
+
+        if all_contacts:
+
+            status = send_email(
+                test_email,
+                "Partnership Opportunity",
+                all_contacts[0]["email_content"]
+            )
+
+            print(
+                f"\nEmail sent to {test_email}"
+            )
+            print(f"Status Code: {status}")
+
     else:
         print("\nEmail sending cancelled.")
 
